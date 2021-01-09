@@ -8,7 +8,7 @@ const makeSut = (): SurveyMongoRepository => {
   return new SurveyMongoRepository()
 }
 
-describe('Survey Mongo Repository', () => {
+describe('SurveyMongoRepository', () => {
   beforeAll(async () => {
     const MONGO_URL = process.env.MONGO_URL ?? 'mongo_url'
     await MongoHelper.connect(MONGO_URL)
