@@ -1,6 +1,6 @@
-import { loginPath } from './paths/login-path'
-import { accountSchema } from './schemas/account-schema'
-import { loginParamsSchema } from './schemas/login-params-schema'
+import { loginPath } from './paths'
+import { badRequest, unauthorized, notFound, serverError } from './components'
+import { accountSchema, loginParamsSchema, errorSchema } from './schemas'
 
 export default {
   openapi: '3.0.0',
@@ -8,6 +8,10 @@ export default {
     title: 'Clean Node API',
     description: 'Documentação API curso NodeJs, Typescript, TDD, Clean Architecture e SOLID - Rodrigo Manguinho - para realização de enquetes entre programadores',
     version: '1.0.0'
+  },
+  license: {
+    name: 'GPL-3.0-or-later',
+    url: ''
   },
   servers: [{
     url: '/api'
@@ -20,6 +24,13 @@ export default {
   },
   schemas: {
     account: accountSchema,
-    loginParams: loginParamsSchema
+    loginParams: loginParamsSchema,
+    error: errorSchema
+  },
+  components: {
+    badRequest,
+    unauthorized,
+    notFound,
+    serverError
   }
 }
