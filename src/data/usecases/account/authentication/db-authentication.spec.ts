@@ -7,7 +7,7 @@ import {
   Encrypter
 } from './db-authentication-protocols'
 import { mockEncrypter, mockHashCompare, mockLoadAccountByEmailRepository, mockUpdateAccessTokenRepository } from '@/data/test'
-import { mockAuthenticationParams, throwError } from '@/domain/test'
+import { mockAccountModel, mockAuthenticationParams, throwError } from '@/domain/test'
 
 type SutTypes = {
   sut: DbAuthentication
@@ -55,8 +55,8 @@ describe('DbAuthentication UseCase', () => {
   test('Should return null if LoadAccountByEmailRepository returns null', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
     jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(null as unknown as Promise<AccountModel>)
-    const accessToken = await sut.auth(mockAuthenticationParams())
-    expect(accessToken).toBeNull()
+    const model = await sut.auth(mockAuthenticationParams())
+    expect(model).toBeNull()
   })
 
   test('Should call HashComparer with correct values', async () => {
@@ -76,8 +76,8 @@ describe('DbAuthentication UseCase', () => {
   test('Should return null if HashComparer returns false', async () => {
     const { sut, hashComparerStub } = makeSut()
     jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(Promise.resolve(false))
-    const accessToken = await sut.auth(mockAuthenticationParams())
-    expect(accessToken).toBeNull()
+    const model = await sut.auth(mockAuthenticationParams())
+    expect(model).toBeNull()
   })
 
   test('Should call Encrypter with correct id', async () => {
@@ -94,10 +94,11 @@ describe('DbAuthentication UseCase', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should return a token on success', async () => {
+  test('Should return an AuthenticationModel on success', async () => {
     const { sut } = makeSut()
-    const accessToken = await sut.auth(mockAuthenticationParams())
+    const { accessToken, name } = await sut.auth(mockAuthenticationParams())
     expect(accessToken).toBe('any_token')
+    expect(name).toBe(mockAccountModel().name)
   })
 
   test('Should call UpdateAccessTokenRepository with correct values', async () => {
