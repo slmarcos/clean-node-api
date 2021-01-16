@@ -1,13 +1,12 @@
 import { DbAuthentication } from './db-authentication'
 import {
-  AccountModel,
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
   HashComparer,
   Encrypter
 } from './db-authentication-protocols'
 import { mockEncrypter, mockHashCompare, mockLoadAccountByEmailRepository, mockUpdateAccessTokenRepository } from '@/data/test'
-import { mockAccountModel, mockAuthenticationParams, throwError } from '@/domain/test'
+import { mockAuthenticationParams, throwError } from '@/domain/test'
 
 type SutTypes = {
   sut: DbAuthentication
@@ -54,7 +53,7 @@ describe('DbAuthentication UseCase', () => {
 
   test('Should return null if LoadAccountByEmailRepository returns null', async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut()
-    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(null as unknown as Promise<AccountModel>)
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(null as unknown as Promise<LoadAccountByEmailRepository.Result>)
     const model = await sut.auth(mockAuthenticationParams())
     expect(model).toBeNull()
   })
@@ -98,7 +97,7 @@ describe('DbAuthentication UseCase', () => {
     const { sut } = makeSut()
     const { accessToken, name } = await sut.auth(mockAuthenticationParams())
     expect(accessToken).toBe('any_token')
-    expect(name).toBe(mockAccountModel().name)
+    expect(name).toBe('any_name')
   })
 
   test('Should call UpdateAccessTokenRepository with correct values', async () => {

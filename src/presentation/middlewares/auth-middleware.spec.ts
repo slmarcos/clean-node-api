@@ -1,4 +1,4 @@
-import { LoadAccountByToken, AccountModel } from './auth-middleware-protocols'
+import { LoadAccountByToken } from './auth-middleware-protocols'
 import { AuthMiddleware } from './auth-middleware'
 import { AccessDeniedError } from '@/presentation/errors'
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
@@ -40,7 +40,7 @@ describe('Auth Middleware', () => {
 
   test('Should return 403 if LoadAccountByToken returns null', async () => {
     const { sut, loadAccountByTokenStub } = makeSut()
-    jest.spyOn(loadAccountByTokenStub, 'load').mockReturnValueOnce(Promise.resolve(null as unknown as AccountModel))
+    jest.spyOn(loadAccountByTokenStub, 'load').mockReturnValueOnce(Promise.resolve(null as unknown as LoadAccountByToken.Result))
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
