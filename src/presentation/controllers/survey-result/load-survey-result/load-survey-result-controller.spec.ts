@@ -1,15 +1,14 @@
 import { LoadSurveyResultController } from './load-survey-result-controller'
-import { HttpRequest, LoadSurveyById, LoadSurveyResult, SurveyModel } from './load-survey-result-controller-protocols'
+import { LoadSurveyById, LoadSurveyResult, SurveyModel } from './load-survey-result-controller-protocols'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '@/presentation/test'
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { InvalidParamError } from '@/presentation/errors'
 import { mockSurveyResultModel, throwError } from '@/domain/test'
+
 import MockDate from 'mockdate'
 
-const mockRequest = (): HttpRequest => ({
-  params: {
-    surveyId: 'any_id'
-  },
+const mockRequest = (): LoadSurveyResultController.Request => ({
+  surveyId: 'any_id',
   accountId: 'any_id'
 })
 
@@ -63,9 +62,9 @@ describe('LoadSurveyResultController', () => {
   test('Should call LoadSurveyResult with correct values', async () => {
     const { sut, loadSurveyResultStub } = makeSut()
     const loadSpy = jest.spyOn(loadSurveyResultStub, 'load')
-    const httpRequest = mockRequest()
-    await sut.handle(httpRequest)
-    expect(loadSpy).toHaveBeenLastCalledWith('any_id', httpRequest.accountId)
+    const request = mockRequest()
+    await sut.handle(request)
+    expect(loadSpy).toHaveBeenLastCalledWith('any_id', request.accountId)
   })
 
   test('Should return 500 if LoadSurveyById throws', async () => {
